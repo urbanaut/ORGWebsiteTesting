@@ -25,7 +25,7 @@
                 <version>2.20</version>
                 <configuration>
                     <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
+                        <suiteXmlFile>src/main/resources/testng/testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
@@ -65,7 +65,7 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.11</version>
-            <scope>compile</scope>
+            <scope>test</scope>
         </dependency>
 
         <!--Spelling Check-->
