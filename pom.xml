@@ -79,6 +79,14 @@
             <version>0.6</version>
         </dependency>
 
+        <!--Extent Reporting-->
+        <dependency>
+            <groupId>com.relevantcodes</groupId>
+            <artifactId>extentreports</artifactId>
+            <version>2.40.2</version>
+        </dependency>
+
+
     </dependencies>
 
 </project>
