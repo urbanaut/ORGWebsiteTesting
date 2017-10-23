@@ -113,7 +113,6 @@ public class ORGPageTests extends TestBase {
     @Test
     public void verifyAllPartnerLinksOpen() {
         List<WebElement> links = orgPage.getPartnerLinks();
-        System.out.println(links);
         try {
             orgPage.openLinksInNewTabAndReturn(links);
         } catch (Exception e) {
