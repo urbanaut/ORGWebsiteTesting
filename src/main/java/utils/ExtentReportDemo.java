@@ -15,9 +15,9 @@ import java.lang.reflect.Method;
 
 public class ExtentReportDemo  {
 
-    public static WebDriver driver;
-    public static ExtentReports extent;
-    public static ExtentTest test;
+    private static WebDriver driver;
+    private static ExtentReports extent;
+    private static ExtentTest test;
 
     @BeforeSuite
     public void beforeSuite() {
@@ -32,14 +32,14 @@ public class ExtentReportDemo  {
         test.assignCategory("Regression Test");
         System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\drivers\\chromedriver.exe");
         driver = new ChromeDriver();
-        test.log(LogStatus.PASS, "Browser launched successfully.");
+        test.log(LogStatus.INFO, "Browser launched successfully.");
     }
 
     @Test
     public void enterInvalidEmailId() throws Exception {
         driver.navigate().to("http://www.tothenew.com");
         String currentUrl = driver.getCurrentUrl();
-        test.log(LogStatus.PASS, "The current URL of the web page is " + currentUrl);
+        test.log(LogStatus.INFO, "The current URL of the web page is " + currentUrl);
         driver.findElement(By.id("email1")).sendKeys("myfake@email");
         driver.findElement(By.cssSelector("input[class='submit subscribeButton']")).click();
         WebElement err = driver.findElement(By.xpath("//*[@id='messageBox']/p/b"));
