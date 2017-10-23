@@ -23,6 +23,7 @@ public class TestBase {
         prefs.put("credentials_enable_service", false);
         prefs.put("profile.password_manager_enabled", false);
         options.setExperimentalOption("prefs", prefs);
+        options.setBinary("src/main/resources/drivers/chromedriver.exe");
         driver = new ChromeDriver(options);
         driver.navigate().to("http://operationriogrande.utah.gov");
     }
