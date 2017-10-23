@@ -3,7 +3,7 @@ package base;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeSuite;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ public class TestBase {
 
     protected static WebDriver driver;
 
-    @BeforeTest
+    @BeforeSuite
     public void init() {
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -23,7 +23,6 @@ public class TestBase {
         prefs.put("credentials_enable_service", false);
         prefs.put("profile.password_manager_enabled", false);
         options.setExperimentalOption("prefs", prefs);
-        options.setBinary("src/main/resources/drivers/chromedriver.exe");
         driver = new ChromeDriver(options);
         driver.navigate().to("http://operationriogrande.utah.gov");
     }
