@@ -82,15 +82,12 @@ public class Helpers extends TestBase implements SpellCheckListener{
         HttpResponse response = client.execute(new HttpGet(url));
         int statusCode = response.getStatusLine().getStatusCode();
         String responseMessage = response.getStatusLine().getReasonPhrase();
+        System.out.println(url);
+        System.out.println("Response: " + statusCode + ", " + responseMessage);
+        test.log(LogStatus.INFO, url);
         if (statusCode==200) {
-            System.out.println(url);
-            System.out.println("Response: " + statusCode + ", " + responseMessage);
-            test.log(LogStatus.INFO, url);
             test.log(LogStatus.PASS, "Response: " + statusCode + ", " + responseMessage);
         } else {
-            System.out.println(url);
-            System.out.println("Response: " + statusCode + ", " + responseMessage);
-            test.log(LogStatus.INFO, url);
             test.log(LogStatus.FAIL, "Response: " + statusCode + ", " + responseMessage);
         }
     }
