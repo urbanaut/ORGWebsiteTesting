@@ -7,14 +7,14 @@ import com.swabunga.spell.engine.SpellDictionaryHashMap;
 import com.swabunga.spell.event.SpellCheckEvent;
 import com.swabunga.spell.event.SpellCheckListener;
 import com.swabunga.spell.tokenizer.StringWordTokenizer;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
 
 import java.io.File;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +48,8 @@ public class Helpers extends TestBase implements SpellCheckListener{
         misspelledWords = new ArrayList<>();
         spellChecker.checkSpelling(tokenizer);
 
-        System.out.println(misspelledWords.size() + " Misspelled Words: ");
+        System.out.println("\nCompleted Scanning " + driver.getCurrentUrl());
+        System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: ");
         for (String word : misspelledWords) {
             System.out.println(word);
         }
@@ -61,61 +62,25 @@ public class Helpers extends TestBase implements SpellCheckListener{
         misspelledWords.add(spellCheckEvent.getInvalidWord());
     }
 
-    public boolean checkForNewPageLoad(WebElement link) {
-        String pageUrl = driver.getCurrentUrl();
-        link.click();
-        String newUrl = driver.getCurrentUrl();
-        return !pageUrl.equals(newUrl);
-    }
-
-    public boolean checkForFullPageLoad() {
-        JavascriptExecutor js = (JavascriptExecutor)driver;
-        return js.executeScript("return document.readyState").toString().equalsIgnoreCase("complete");
-    }
-
-    public void checkLinkResponseCodes() throws Exception {
-        String responseCode = "";
+    public void checkForPageLoadTimeout() throws Exception {
         int reps = 0;
-        List<String> tabs = new ArrayList<>(driver.getWindowHandles());
-
-        if (tabs.size()>1)
-            driver.switchTo().window(tabs.get(1));
         do{
             Thread.sleep(500);
             reps++;
             if (reps==20) {
-                System.out.println("Timed out waiting for page to load.");
+                System.out.println("Timed out waiting for page to load, skipping.");
                 break;
             }
         } while(driver.getCurrentUrl().equals("about:blank"));
-
-        String newUrl = driver.getCurrentUrl();
-        if (newUrl.equals("about:blank")){
-            System.out.println("Page failed to load within 10 seconds, checking next link...\n");
-            closeNewTabAndReturn();
-            return;
-        }
-
-        try {
-            URL url = new URL(newUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//            connection.connect();
-            responseCode = String.valueOf(connection.getResponseCode());
-            String responseMessage = connection.getResponseMessage();
-            System.out.println(newUrl);
-            System.out.println("Response: " + responseCode + " " + responseMessage + "\n");
-//            connection.disconnect();
-        } catch (Exception e) {
-            System.out.println("Retrieving response code failed.");
-            e.printStackTrace();
-        }
-
-        if (!responseCode.equals("200")) {
-            System.out.println("Warning: Response code was not 200 (OK) as expected.\n");
-        }
-
-        closeNewTabAndReturn();
     }
 
-
+    public void getResponseCode() throws Exception {
+        String url = driver.getCurrentUrl();
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpResponse response = client.execute(new HttpGet(url));
+        int statusCode = response.getStatusLine().getStatusCode();
+        String responseMessage = response.getStatusLine().getReasonPhrase();
+        System.out.println(url);
+        System.out.println("Response: " + statusCode + ", " + responseMessage);
+    }
 }

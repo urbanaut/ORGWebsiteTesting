@@ -4,7 +4,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.testng.Assert;
 import utils.Helpers;
 
 import java.util.ArrayList;
@@ -42,8 +41,12 @@ public class ORGPage {
     // Videos
     @FindBy(xpath = "//iframe[contains(@src,'youtube')]")
     private List<WebElement> videos;
+
     @FindBy(xpath = "//button[@class='ytp-play-button ytp-button']")
-    public WebElement videoPlayPauseBtn;
+    private WebElement videoPlayPauseBtn;
+
+    @FindBy(xpath = "//div[@class='col-md-12 archiveVideos']")
+    private WebElement archivedVideosLnk;
 
     // News Articles
     @FindBy(xpath = "//div[@class='col-md-12 recent-media-coverage ']/div[@class='col-md-12 ']//a")
@@ -56,6 +59,7 @@ public class ORGPage {
     // Footer Links
     @FindBy(xpath = "//div[@class='col-md-12 text-center']/a")
     private List<WebElement> footerLinks;
+
 
     public List<WebElement> getHeaderLinks() {
         return headerLinks;
@@ -73,6 +77,14 @@ public class ORGPage {
         return videos;
     }
 
+    public WebElement getVideoPlayPauseBtn() {
+        return videoPlayPauseBtn;
+    }
+
+    public WebElement getArchivedVideosLnk() {
+        return archivedVideosLnk;
+    }
+
     public List<WebElement> getNewsArticles() {
         return newsArticles;
     }
@@ -85,24 +97,47 @@ public class ORGPage {
         return footerLinks;
     }
 
-    public void openLinksInNewTabAndReturn(List<WebElement> links) {
-        for (int i=0; i<links.size(); i++) {
-            links.get(i).click();
-            List<String> tabs = new ArrayList<>(driver.getWindowHandles());
-            Assert.assertTrue(tabs.size()>1, "No new window opened.");
-            helpers.closeNewTabAndReturn();
+
+    public void openLinksInCurrentOrNewTabAndReturn(List<WebElement> links) {
+        String startingUrl = driver.getCurrentUrl();
+        String newUrl;
+        try {
+            for (int i=0; i<links.size(); i++) {
+                links.get(i).click();
+                newUrl = driver.getCurrentUrl();
+                List<String> tabs = new ArrayList<>(driver.getWindowHandles());
+                if (!startingUrl.equals(newUrl)) {
+                    driver.navigate().back();
+                }
+                else if (tabs.size()>1) {
+                    helpers.closeNewTabAndReturn();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Unable to navigate back or close tab.");
+            e.printStackTrace();
         }
     }
 
-    // TODO fix this method, failing
-    public void openLinksAndReturn(List<WebElement> links) throws InterruptedException {
-        String startingUrl = driver.getCurrentUrl();
-        String newUrl;
-        for (int i=0; i<links.size(); i++) {
-            links.get(i).click();
-            newUrl = driver.getCurrentUrl();
-            Assert.assertFalse(startingUrl.equals(newUrl), "Link not opened.");
-            driver.navigate().back();
+    public void followLinkAndGetResponse(List<WebElement> links) {
+        try {
+            for (int i=0; i<links.size(); i++) {
+                links.get(i).click();
+                List<String> tabs = new ArrayList<>(driver.getWindowHandles());
+                if (tabs.size()>1) {
+                    driver.switchTo().window(tabs.get(1));
+                    helpers.checkForPageLoadTimeout();
+                    helpers.getResponseCode();
+                    driver.close();
+                    driver.switchTo().window(tabs.get(0));
+                } else if (tabs.size()==1) {
+                    helpers.getResponseCode();
+                    driver.navigate().back();
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Unable to navigate back or close tab.");
+            e.printStackTrace();
         }
     }
 

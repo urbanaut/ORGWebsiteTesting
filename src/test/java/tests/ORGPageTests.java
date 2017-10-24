@@ -41,11 +41,30 @@ public class ORGPageTests extends TestBase {
     }
 
     @Test
-    public void checkMainPageForSpellingErrors() {
+    public void checkORGPagesForSpellingErrors() {
+        List<WebElement> sideLinks = orgPage.getSideLinks();
         try {
             helpers.checkPageSpelling();
+            for (int i=1; i<sideLinks.size(); i++) {
+                if (i==3)
+                    continue;
+                sideLinks.get(i).click();
+                helpers.checkPageSpelling();
+                driver.navigate().back();
+            }
         } catch (Exception e) {
             System.out.println("Spelling check failed.");
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void verifyAllHeaderLinksOpen() {
+        List<WebElement> links = orgPage.getHeaderLinks();
+        try {
+            orgPage.openLinksInCurrentOrNewTabAndReturn(links);
+        } catch (Exception e) {
+            System.out.println("Footer link not opened.");
             e.printStackTrace();
         }
     }
@@ -57,7 +76,7 @@ public class ORGPageTests extends TestBase {
             for (int i=0; i<videos.size(); i++) {
                 videos.get(i).click();
                 driver.switchTo().frame(i);
-                String videoState = orgPage.videoPlayPauseBtn.getAttribute("aria-label");
+                String videoState = orgPage.getVideoPlayPauseBtn().getAttribute("aria-label");
                 Assert.assertTrue(videoState.equals("Pause"), "Video is not playing.");
                 driver.switchTo().defaultContent();
                 videos.get(i).click();
@@ -70,7 +89,21 @@ public class ORGPageTests extends TestBase {
     }
 
     @Test
-    public void verifyPdfFileLoads() {
+    public void verifyArchivedVideosOpen() {
+        WebElement archivedVideos = orgPage.getArchivedVideosLnk();
+        try {
+            String startingUrl = driver.getCurrentUrl();
+            archivedVideos.click();
+            String newUrl = driver.getCurrentUrl();
+            Assert.assertTrue(!startingUrl.equals(newUrl), "URL did not change after clicking link.");
+            driver.navigate().back();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void verifyORGPhasesPdfFileLoads() {
         List<WebElement> sideLinks = orgPage.getSideLinks();
         try {
             sideLinks.get(0).click();
@@ -89,7 +122,7 @@ public class ORGPageTests extends TestBase {
         WebElement volunteerLink = orgPage.getSideLinks().get(3);
         try {
             volunteerLink.click();
-            Thread.sleep(1000);
+            helpers.checkForPageLoadTimeout();
             List<String> tabs = new ArrayList<>(driver.getWindowHandles());
             Assert.assertTrue(tabs.size()>1, "No new window opened.");
             helpers.closeNewTabAndReturn();
@@ -103,7 +136,7 @@ public class ORGPageTests extends TestBase {
     public void verifyNewsArticleLinksOpen() {
         List<WebElement> links = orgPage.getNewsArticles();
         try {
-            orgPage.openLinksInNewTabAndReturn(links);
+            orgPage.openLinksInCurrentOrNewTabAndReturn(links);
         } catch (Exception e) {
             System.out.println("Article link not opened.");
             e.printStackTrace();
@@ -114,7 +147,7 @@ public class ORGPageTests extends TestBase {
     public void verifyAllPartnerLinksOpen() {
         List<WebElement> links = orgPage.getPartnerLinks();
         try {
-            orgPage.openLinksInNewTabAndReturn(links);
+            orgPage.openLinksInCurrentOrNewTabAndReturn(links);
         } catch (Exception e) {
             System.out.println("Partner link not opened.");
             e.printStackTrace();
@@ -125,10 +158,24 @@ public class ORGPageTests extends TestBase {
     public void verifyAllFooterLinksOpen() {
         List<WebElement> links = orgPage.getFooterLinks();
         try {
-            orgPage.openLinksAndReturn(links);
+            orgPage.openLinksInCurrentOrNewTabAndReturn(links);
         } catch (Exception e) {
             System.out.println("Footer link not opened.");
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void checkLinkResponseCodes() throws Exception {
+        List<List<WebElement>> allLinks = new ArrayList<>();
+        allLinks.add(orgPage.getHeaderLinks());
+        allLinks.add(orgPage.getSideLinks());
+        allLinks.add(orgPage.getNewsArticles());
+        allLinks.add(orgPage.getPartnerLinks());
+        allLinks.add(orgPage.getFooterLinks());
+
+        for (List<WebElement> link : allLinks) {
+            orgPage.followLinkAndGetResponse(link);
         }
     }
 }
