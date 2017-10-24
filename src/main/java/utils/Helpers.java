@@ -48,12 +48,11 @@ public class Helpers extends TestBase implements SpellCheckListener{
         misspelledWords = new ArrayList<>();
         spellChecker.checkSpelling(tokenizer);
 
-        System.out.println("\nCompleted Scanning " + driver.getCurrentUrl());
+        System.out.println("\nCompleted Spellchecking " + driver.getCurrentUrl());
         System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: ");
         for (String word : misspelledWords) {
             System.out.println(word);
         }
-
     }
 
     @Override

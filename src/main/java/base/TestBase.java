@@ -1,19 +1,32 @@
 package base;
 
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
+import java.io.File;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestBase {
 
     protected static WebDriver driver;
+    private static ExtentReports extent;
+    private static ExtentTest test;
 
     @BeforeSuite
     public void init() {
+        extent = new ExtentReports("src/main/java/output/ORG_Test_Report.html", true);
+        extent.loadConfig(new File("src/main/resources/extent/extent-config.xml"));
+        test.assignAuthor("Bill Witt");
+        test.assignCategory("Operation Rio Grande Website Test");
+
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
@@ -26,5 +39,18 @@ public class TestBase {
         options.setBinary("C:\\Program Files (x86)\\Google\\Chrome\\Application\\Chrome.exe");
         driver = new ChromeDriver(options);
         driver.navigate().to("http://operationriogrande.utah.gov");
+    }
+
+    @BeforeMethod
+    public void beforeMethod(Method method) {
+        test = extent.startTest((this.getClass().getSimpleName() + " :: " + method.getName()), method.getName());
+    }
+
+    @AfterSuite
+    public void afterSuite() {
+        driver.quit();
+        extent.endTest(test);
+        extent.flush();
+        extent.close();
     }
 }
