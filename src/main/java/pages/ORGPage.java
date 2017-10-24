@@ -1,5 +1,8 @@
 package pages;
 
+import base.TestBase;
+import com.relevantcodes.extentreports.LogStatus;
+import com.relevantcodes.extentreports.model.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,7 +12,7 @@ import utils.Helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ORGPage {
+public class ORGPage extends TestBase {
 
     private WebDriver driver;
     private Helpers helpers;
@@ -115,6 +118,7 @@ public class ORGPage {
             }
         } catch (Exception e) {
             System.out.println("Unable to navigate back or close tab.");
+            test.log(LogStatus.FAIL, "ERROR: Failed navigate back or close tab.");
             e.printStackTrace();
         }
     }
@@ -137,6 +141,7 @@ public class ORGPage {
             }
         } catch (Exception e) {
             System.out.println("Unable to navigate back or close tab.");
+            test.log(LogStatus.FAIL, "ERROR: Failed to navigate back or close tab.");
             e.printStackTrace();
         }
     }

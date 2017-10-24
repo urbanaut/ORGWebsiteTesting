@@ -18,14 +18,12 @@ public class TestBase {
 
     protected static WebDriver driver;
     private static ExtentReports extent;
-    private static ExtentTest test;
+    protected static ExtentTest test;
 
     @BeforeSuite
     public void init() {
         extent = new ExtentReports("src/main/java/output/ORG_Test_Report.html", true);
         extent.loadConfig(new File("src/main/resources/extent/extent-config.xml"));
-        test.assignAuthor("Bill Witt");
-        test.assignCategory("Operation Rio Grande Website Test");
 
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -44,12 +42,14 @@ public class TestBase {
     @BeforeMethod
     public void beforeMethod(Method method) {
         test = extent.startTest((this.getClass().getSimpleName() + " :: " + method.getName()), method.getName());
+        test.assignAuthor("Bill Witt");
+        test.assignCategory("Operation Rio Grande Website Test");
+        extent.endTest(test);
     }
 
     @AfterSuite
     public void afterSuite() {
         driver.quit();
-        extent.endTest(test);
         extent.flush();
         extent.close();
     }

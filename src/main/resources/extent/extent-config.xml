@@ -4,8 +4,8 @@
         <encoding>UTF-8</encoding>
         <protocol>https</protocol>
         <theme>dark</theme>
-        <documentTitle>My Extent Report</documentTitle>
-        <reportName>My First Extent Report</reportName>
+        <documentTitle>ORG Test Results</documentTitle>
+        <reportName>Operation Rio Grande Test Report</reportName>
         <reportHeadline></reportHeadline>
         <dateFormat>MM-dd-yyyy</dateFormat>
         <timeFormat>HH:mm:ss</timeFormat>
@@ -23,7 +23,8 @@
             ]]>
         </scripts>
         <styles>
-            <![CDATA[        ]]>
+            <![CDATA[
+            ]]>
         </styles>
     </configuration>
 </extentreports>

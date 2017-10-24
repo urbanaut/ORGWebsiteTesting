@@ -1,6 +1,7 @@
 package utils;
 
 import base.TestBase;
+import com.relevantcodes.extentreports.LogStatus;
 import com.swabunga.spell.SpellChecker;
 import com.swabunga.spell.TeXWordFinder;
 import com.swabunga.spell.engine.SpellDictionaryHashMap;
@@ -48,10 +49,11 @@ public class Helpers extends TestBase implements SpellCheckListener{
         misspelledWords = new ArrayList<>();
         spellChecker.checkSpelling(tokenizer);
 
-        System.out.println("\nCompleted Spellchecking " + driver.getCurrentUrl());
-        System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: ");
-        for (String word : misspelledWords) {
-            System.out.println(word);
+        if (misspelledWords.size()>1) {
+            System.out.println("\nCompleted Spellchecking " + driver.getCurrentUrl());
+            System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
+            test.log(LogStatus.INFO, "Completed Spellchecking " + driver.getCurrentUrl());
+            test.log(LogStatus.INFO, misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
         }
     }
 
@@ -68,6 +70,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             reps++;
             if (reps==20) {
                 System.out.println("Timed out waiting for page to load, skipping.");
+                test.log(LogStatus.FAIL, "ERROR: Timed out waiting for page to load.");
                 break;
             }
         } while(driver.getCurrentUrl().equals("about:blank"));
@@ -79,7 +82,16 @@ public class Helpers extends TestBase implements SpellCheckListener{
         HttpResponse response = client.execute(new HttpGet(url));
         int statusCode = response.getStatusLine().getStatusCode();
         String responseMessage = response.getStatusLine().getReasonPhrase();
-        System.out.println(url);
-        System.out.println("Response: " + statusCode + ", " + responseMessage);
+        if (statusCode==200) {
+            System.out.println(url);
+            System.out.println("Response: " + statusCode + ", " + responseMessage);
+            test.log(LogStatus.INFO, url);
+            test.log(LogStatus.PASS, "Response: " + statusCode + ", " + responseMessage);
+        } else {
+            System.out.println(url);
+            System.out.println("Response: " + statusCode + ", " + responseMessage);
+            test.log(LogStatus.INFO, url);
+            test.log(LogStatus.FAIL, "Response: " + statusCode + ", " + responseMessage);
+        }
     }
 }
