@@ -47,10 +47,10 @@ public class TestBase {
         extent.endTest(test);
     }
 
-    @AfterSuite
-    public void afterSuite() {
-        driver.quit();
-        extent.flush();
-        extent.close();
-    }
+//    @AfterSuite
+//    public void afterSuite() {
+//        driver.quit();
+//        extent.flush();
+//        extent.close();
+//    }
 }

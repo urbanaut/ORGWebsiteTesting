@@ -45,11 +45,9 @@ public class ORGPage extends TestBase {
     // Videos
     @FindBy(xpath = "//iframe[contains(@src,'youtube')]")
     private List<WebElement> videos;
-
     @FindBy(xpath = "//button[@class='ytp-play-button ytp-button']")
     private WebElement videoPlayPauseBtn;
-
-    @FindBy(xpath = "//div[@class='col-md-12 archiveVideos']")
+    @FindBy(xpath = "//div[@class='col-md-12 archiveVideos']/a")
     private WebElement archivedVideosLnk;
 
     // News Articles
@@ -131,6 +129,7 @@ public class ORGPage extends TestBase {
     public void getLinkResponseCode(List<WebElement> links) {
         try {
             for (int i=0; i<links.size(); i++) {
+                System.out.println("\n" + links.get(i).getText());
                 String url = links.get(i).getAttribute("href");
                 helpers.getStatusCode(url);
             }
