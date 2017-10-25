@@ -2,7 +2,6 @@ package pages;
 
 import base.TestBase;
 import com.relevantcodes.extentreports.LogStatus;
-import com.relevantcodes.extentreports.model.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -37,9 +36,11 @@ public class ORGPage extends TestBase {
     @FindBy(xpath = "//div[@class='org-header']/div/div")
     private List<WebElement> headingLinks;
 
-    // Left Side Links
+    // Right Side Links
     @FindBy(xpath = "//div[@class='col-md-4 col-sm-12 col-xs-12']//a/div")
     private List<WebElement> sideLinks;
+    @FindBy(xpath = "//div[@class='col-md-4 col-sm-12 col-xs-12']//div/a")
+    private List<WebElement> sideLinkUrls;
 
     // Videos
     @FindBy(xpath = "//iframe[contains(@src,'youtube')]")
@@ -74,6 +75,10 @@ public class ORGPage extends TestBase {
 
     public List<WebElement> getSideLinks() {
         return sideLinks;
+    }
+
+    public List<WebElement> getSideLinkUrls() {
+        return sideLinkUrls;
     }
 
     public List<WebElement> getVideos() {
@@ -123,27 +128,18 @@ public class ORGPage extends TestBase {
         }
     }
 
-    public void followLinkAndGetResponse(List<WebElement> links) {
+    public void getLinkResponseCode(List<WebElement> links) {
         try {
             for (int i=0; i<links.size(); i++) {
-                links.get(i).click();
-                List<String> tabs = new ArrayList<>(driver.getWindowHandles());
-                if (tabs.size()>1) {
-                    driver.switchTo().window(tabs.get(1));
-                    helpers.checkForPageLoadTimeout();
-                    helpers.getResponseCode();
-                    driver.close();
-                    driver.switchTo().window(tabs.get(0));
-                } else if (tabs.size()==1) {
-                    helpers.getResponseCode();
-                    driver.navigate().back();
-                }
+                String url = links.get(i).getAttribute("href");
+                helpers.getStatusCode(url);
             }
         } catch (Exception e) {
-            System.out.println("Unable to navigate back or close tab.");
-            test.log(LogStatus.FAIL, "ERROR: Failed to navigate back or close tab.");
+            System.out.println("Failed to retrieve response code.");
+            test.log(LogStatus.FAIL, "ERROR: Failed to retrieve response code.");
             e.printStackTrace();
         }
     }
+
 
 }

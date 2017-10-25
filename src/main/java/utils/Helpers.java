@@ -23,17 +23,6 @@ public class Helpers extends TestBase implements SpellCheckListener{
 
     private List<String> misspelledWords;
 
-    public void closeNewTabAndReturn() {
-        List<String> tabs = new ArrayList<>(driver.getWindowHandles());
-        if (!(tabs.size() > 1)) {
-            driver.navigate().back();
-        } else {
-            driver.switchTo().window(tabs.get(1));
-            driver.close();
-            driver.switchTo().window(tabs.get(0));
-        }
-    }
-
     public void checkPageSpelling() throws Exception {
         String dictFile = "src\\main\\resources\\dictionaries\\en-US.dic";
         File dict = new File(dictFile);
@@ -63,12 +52,24 @@ public class Helpers extends TestBase implements SpellCheckListener{
         misspelledWords.add(spellCheckEvent.getInvalidWord());
     }
 
+
+    public void closeNewTabAndReturn() {
+        List<String> tabs = new ArrayList<>(driver.getWindowHandles());
+        if (!(tabs.size() > 1)) {
+            driver.navigate().back();
+        } else {
+            driver.switchTo().window(tabs.get(1));
+            driver.close();
+            driver.switchTo().window(tabs.get(0));
+        }
+    }
+
     public void checkForPageLoadTimeout() throws Exception {
         int reps = 0;
         do{
             Thread.sleep(500);
             reps++;
-            if (reps==20) {
+            if (reps==10) {
                 System.out.println("Timed out waiting for page to load, skipping.");
                 test.log(LogStatus.FAIL, "ERROR: Timed out waiting for page to load.");
                 break;
@@ -76,19 +77,25 @@ public class Helpers extends TestBase implements SpellCheckListener{
         } while(driver.getCurrentUrl().equals("about:blank"));
     }
 
-    public void getResponseCode() throws Exception {
-        String url = driver.getCurrentUrl();
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = client.execute(new HttpGet(url));
-        int statusCode = response.getStatusLine().getStatusCode();
-        String responseMessage = response.getStatusLine().getReasonPhrase();
-        System.out.println(url);
-        System.out.println("Response: " + statusCode + ", " + responseMessage);
-        test.log(LogStatus.INFO, url);
-        if (statusCode==200) {
-            test.log(LogStatus.PASS, "Response: " + statusCode + ", " + responseMessage);
-        } else {
-            test.log(LogStatus.FAIL, "Response: " + statusCode + ", " + responseMessage);
+    public void getStatusCode(String url) throws Exception {
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpResponse response = client.execute(new HttpGet(url));
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseMessage = response.getStatusLine().getReasonPhrase();
+
+            System.out.println(url);
+            System.out.println("Response: " + statusCode + ", " + responseMessage);
+            test.log(LogStatus.INFO, url);
+            if (statusCode == 200) {
+                test.log(LogStatus.PASS, "Response: " + statusCode + ", " + responseMessage);
+            } else {
+                test.log(LogStatus.FAIL, "Response: " + statusCode + ", " + responseMessage);
+            }
+        }catch (Exception e) {
+            System.out.println("Retrieving response code failed.");
+            test.log(LogStatus.FAIL, "ERROR: Failed to retrieve response code from URL.");
+            e.printStackTrace();
         }
     }
 }
