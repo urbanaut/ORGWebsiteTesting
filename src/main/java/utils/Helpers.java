@@ -88,9 +88,9 @@ public class Helpers extends TestBase implements SpellCheckListener{
             System.out.println("Response: " + statusCode + ", " + responseMessage);
             test.log(LogStatus.INFO, url);
             if (statusCode == 200) {
-                test.log(LogStatus.PASS, "Response: " + statusCode + ", " + responseMessage);
+                test.log(LogStatus.PASS, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
             } else {
-                test.log(LogStatus.FAIL, "Response: " + statusCode + ", " + responseMessage);
+                test.log(LogStatus.FAIL, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
             }
         }catch (Exception e) {
             System.out.println("Retrieving response code failed.");

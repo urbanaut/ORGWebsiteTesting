@@ -23,7 +23,7 @@ public class ORGPageTests extends TestBase {
         helpers = new Helpers();
     }
 
-    @Test(priority = 1)
+    @Test
     public void verifyHeaderPresentOnAllPages() {
         test.log(LogStatus.INFO, "TEST: Verifying that the 'Operation Rio Grande' heading is on each ORG page.");
         List<WebElement> sideLinks = orgPage.getSideLinks();
@@ -44,7 +44,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 2)
+    @Test
     public void checkORGPagesForSpellingErrors() {
         test.log(LogStatus.INFO, "TEST: Checking all ORG pages for spelling errors.");
         List<WebElement> sideLinks = orgPage.getSideLinks();
@@ -64,7 +64,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 3)
+    @Test
     public void verifyAllHeaderLinksOpen() {
         test.log(LogStatus.INFO, "TEST: Verifying that all header links open successfully.");
         List<WebElement> links = orgPage.getHeaderLinks();
@@ -78,7 +78,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 4)
+    @Test
     public void verifyAllVideosPlay() {
         test.log(LogStatus.INFO, "TEST: Verifying that all videos on the main ORG play.");
         List<WebElement> videos = orgPage.getVideos();
@@ -99,7 +99,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 5)
+    @Test
     public void verifyArchivedVideosOpen() {
         test.log(LogStatus.INFO, "TEST: Verifying that archived videos page opens.");
         WebElement archivedVideos = orgPage.getArchivedVideosLnk();
@@ -116,7 +116,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 6)
+    @Test
     public void verifyORGPhasesPdfFileLoads() {
         test.log(LogStatus.INFO, "TEST: Verifying that the ORG Phases PDF file opens.");
         List<WebElement> sideLinks = orgPage.getSideLinks();
@@ -134,7 +134,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 7)
+    @Test
     public void verifyVolunteerOrDonatePageOpens() {
         test.log(LogStatus.INFO, "TEST: Verifying that the 'Volunteer or Donate' page opens.");
         WebElement volunteerLink = orgPage.getSideLinks().get(3);
@@ -152,7 +152,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 8)
+    @Test
     public void verifyAllSideLinksOpen() {
         test.log(LogStatus.INFO, "TEST: Verifying that all side links open.");
         List<WebElement> links = orgPage.getSideLinks();
@@ -163,7 +163,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 9)
+    @Test
     public void verifyNewsArticleLinksOpen() {
         test.log(LogStatus.INFO, "TEST: Verifying that all news article links open.");
         List<WebElement> links = orgPage.getNewsArticles();
@@ -177,7 +177,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 10)
+    @Test
     public void verifyAllPartnerLinksOpen() {
         test.log(LogStatus.INFO, "TEST: Verifying that all partner links open.");
         List<WebElement> links = orgPage.getPartnerLinks();
@@ -191,7 +191,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 11)
+    @Test
     public void verifyAllFooterLinksOpen() {
         test.log(LogStatus.INFO, "TEST: Verifying that all footer links open.");
         List<WebElement> links = orgPage.getFooterLinks();
@@ -205,7 +205,7 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test(priority = 12)
+    @Test
     public void checkLinkResponseCodes() throws Exception {
         test.log(LogStatus.INFO, "TEST: Checking that all link response codes return 200.");
         List<List<WebElement>> allLinks = new ArrayList<>();
@@ -215,7 +215,6 @@ public class ORGPageTests extends TestBase {
             allLinks.add(orgPage.getNewsArticles());
             allLinks.add(orgPage.getPartnerLinks());
             allLinks.add(orgPage.getFooterLinks());
-
             for (List<WebElement> link : allLinks) {
                 orgPage.getLinkResponseCode(link);
             }

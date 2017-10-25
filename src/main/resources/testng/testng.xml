@@ -2,9 +2,12 @@
 
 <suite name="ORG Page Tests" verbose="1">
 
-    <test name="All Tests">
+    <listeners>
+        <listener class-name="utils.AssignTestPriorityTransformer" />
+    </listeners>
+    <test name="ORG Website Regression Tests">
         <classes>
-            <class name="tests.ORGPageTests"/>
+            <class name="tests.ORGPageTests" />
         </classes>
     </test>
 
