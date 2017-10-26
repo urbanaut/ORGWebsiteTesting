@@ -8,20 +8,26 @@ import com.swabunga.spell.engine.SpellDictionaryHashMap;
 import com.swabunga.spell.event.SpellCheckEvent;
 import com.swabunga.spell.event.SpellCheckListener;
 import com.swabunga.spell.tokenizer.StringWordTokenizer;
+import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Helpers extends TestBase implements SpellCheckListener{
 
     private List<String> misspelledWords;
+    private String screenshotPath = "src/main/java/output/";
 
     public void checkPageSpelling() throws Exception {
         String dictFile = "src\\main\\resources\\dictionaries\\en-US.dic";
@@ -98,4 +104,16 @@ public class Helpers extends TestBase implements SpellCheckListener{
             e.printStackTrace();
         }
     }
+
+    public String takeScreenshot() throws Exception {
+        String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
+        TakesScreenshot screenshot = ((TakesScreenshot)driver);
+        File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+        String snapshot = screenshotPath + timestamp +".png";
+        File destFile = new File(snapshot);
+        FileUtils.copyFile(srcFile, destFile);
+        return snapshot;
+    }
+
+
 }
