@@ -1,7 +1,10 @@
 package base;
 
-import com.relevantcodes.extentreports.ExtentReports;
-import com.relevantcodes.extentreports.ExtentTest;
+import com.aventstack.extentreports.AnalysisStrategy;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import com.aventstack.extentreports.reporter.ExtentXReporter;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -17,13 +20,23 @@ import java.util.Map;
 public class TestBase {
 
     protected static WebDriver driver;
+
+    private static ExtentHtmlReporter htmlReporter;
+    private static ExtentXReporter extentXReporter;
     private static ExtentReports extent;
     protected static ExtentTest test;
 
     @BeforeSuite
     public void init() {
-        extent = new ExtentReports("src/main/java/output/ORG_Test_Report.html", true);
-        extent.loadConfig(new File("src/main/resources/extent/extent-config.xml"));
+        htmlReporter = new ExtentHtmlReporter("src/main/java/output/ORG_Test_Report.html");
+        htmlReporter.loadXMLConfig(new File("src/main/resources/extent/extent-config.xml"));
+        htmlReporter.setAppendExisting(true);
+        extent = new ExtentReports();
+        extent.attachReporter(htmlReporter);
+        extent.setAnalysisStrategy(AnalysisStrategy.SUITE);
+//        extentXReporter = new ExtentXReporter("mongodb-host", 2234);
+//        extent = new ExtentReports("src/main/java/output/ORG_Test_Report.html", true);
+//        extent.loadConfig(new File("src/main/resources/extent/extent-config.xml"));
 
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -41,16 +54,14 @@ public class TestBase {
 
     @BeforeMethod
     public void beforeMethod(Method method) {
-        test = extent.startTest((this.getClass().getSimpleName() + " :: " + method.getName()), method.getName());
+        test = extent.createTest((this.getClass().getSimpleName() + " :: " + method.getName()), method.getName());
         test.assignAuthor("Bill Witt");
         test.assignCategory("Operation Rio Grande Website Test");
-        extent.endTest(test);
     }
 
     @AfterSuite
     public void afterSuite() {
         driver.quit();
         extent.flush();
-        extent.close();
     }
 }

@@ -1,7 +1,7 @@
 package utils;
 
 import base.TestBase;
-import com.relevantcodes.extentreports.LogStatus;
+import com.aventstack.extentreports.Status;
 import com.swabunga.spell.SpellChecker;
 import com.swabunga.spell.TeXWordFinder;
 import com.swabunga.spell.engine.SpellDictionaryHashMap;
@@ -47,8 +47,8 @@ public class Helpers extends TestBase implements SpellCheckListener{
         if (misspelledWords.size()>1) {
             System.out.println("\nCompleted Spellchecking " + driver.getCurrentUrl());
             System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
-            test.log(LogStatus.INFO, "Completed Spellchecking " + driver.getCurrentUrl());
-            test.log(LogStatus.INFO, misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
+            test.log(Status.INFO, "Completed Spellchecking " + driver.getCurrentUrl());
+            test.log(Status.INFO, misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
         }
     }
 
@@ -77,7 +77,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             reps++;
             if (reps==10) {
                 System.out.println("Timed out waiting for page to load, skipping.");
-                test.log(LogStatus.FAIL, "ERROR: Timed out waiting for page to load.");
+                test.log(Status.FAIL, "ERROR: Timed out waiting for page to load.");
                 break;
             }
         } while(driver.getCurrentUrl().equals("about:blank"));
@@ -92,15 +92,17 @@ public class Helpers extends TestBase implements SpellCheckListener{
 
             System.out.println(url);
             System.out.println("Response: " + statusCode + ", " + responseMessage);
-            test.log(LogStatus.INFO, url);
+            test.log(Status.INFO, url);
             if (statusCode == 200) {
-                test.log(LogStatus.PASS, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
+                test.log(Status.PASS, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
             } else {
-                test.log(LogStatus.FAIL, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
+                test.log(Status.FAIL, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
+                String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
+                test.addScreenCaptureFromPath(screenshotPath + timestamp + ".png");
             }
         }catch (Exception e) {
             System.out.println("Retrieving response code failed.");
-            test.log(LogStatus.FAIL, "ERROR: Failed to retrieve response code from URL.");
+            test.log(Status.FAIL, "ERROR: Failed to retrieve response code from URL.");
             e.printStackTrace();
         }
     }

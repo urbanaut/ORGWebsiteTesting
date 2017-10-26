@@ -62,9 +62,9 @@
 
         <!--Extent Reporting-->
         <dependency>
-            <groupId>com.relevantcodes</groupId>
+            <groupId>com.aventstack</groupId>
             <artifactId>extentreports</artifactId>
-            <version>2.40.2</version>
+            <version>3.0.7</version>
         </dependency>
 
         <!--Response Code Handling-->

@@ -1,7 +1,7 @@
 package pages;
 
 import base.TestBase;
-import com.relevantcodes.extentreports.LogStatus;
+import com.aventstack.extentreports.Status;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -121,7 +121,7 @@ public class ORGPage extends TestBase {
             }
         } catch (Exception e) {
             System.out.println("Unable to navigate back or close tab.");
-            test.log(LogStatus.FAIL, "ERROR: Failed navigate back or close tab.");
+            test.log(Status.FAIL, "ERROR: Failed navigate back or close tab.");
             e.printStackTrace();
         }
     }
@@ -135,7 +135,7 @@ public class ORGPage extends TestBase {
             }
         } catch (Exception e) {
             System.out.println("Failed to retrieve response code.");
-            test.log(LogStatus.FAIL, "ERROR: Failed to retrieve response code.");
+            test.log(Status.FAIL, "ERROR: Failed to retrieve response code.");
             e.printStackTrace();
         }
     }

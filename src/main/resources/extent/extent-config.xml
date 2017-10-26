@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <extentreports>
     <configuration>
+        <theme>dark</theme>
         <encoding>UTF-8</encoding>
         <protocol>https</protocol>
         <theme>dark</theme>
+
         <documentTitle>ORG Test Results</documentTitle>
         <reportName>Operation Rio Grande Test Report</reportName>
-        <reportHeadline></reportHeadline>
+
+        <testViewChartLocation>bottom</testViewChartLocation>
         <dateFormat>MM-dd-yyyy</dateFormat>
         <timeFormat>HH:mm:ss</timeFormat>
+
         <scripts>
             <![CDATA[
                 $(document).ready(function() {
