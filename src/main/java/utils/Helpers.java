@@ -48,7 +48,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             System.out.println("\nCompleted Spellchecking " + driver.getCurrentUrl());
             System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
             test.log(Status.INFO, "Completed Spellchecking " + driver.getCurrentUrl());
-            test.log(Status.INFO, misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
+            test.log(Status.INFO, misspelledWords.size() + " Possibly Misspelled Words Found: \n <pre>" + String.valueOf(misspelledWords) + "</pre>");
         }
     }
 
@@ -97,8 +97,8 @@ public class Helpers extends TestBase implements SpellCheckListener{
                 test.log(Status.PASS, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
             } else {
                 test.log(Status.FAIL, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
-                String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
-                test.addScreenCaptureFromPath(screenshotPath + timestamp + ".png");
+//                String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
+//                test.addScreenCaptureFromPath(screenshotPath + timestamp + ".png");
             }
         }catch (Exception e) {
             System.out.println("Retrieving response code failed.");

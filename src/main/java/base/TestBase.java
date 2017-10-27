@@ -1,6 +1,5 @@
 package base;
 
-import com.aventstack.extentreports.AnalysisStrategy;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
@@ -22,7 +21,7 @@ public class TestBase {
     protected static WebDriver driver;
 
     private static ExtentHtmlReporter htmlReporter;
-    private static ExtentXReporter extentXReporter;
+    private static ExtentXReporter extentX;
     private static ExtentReports extent;
     protected static ExtentTest test;
 
@@ -31,12 +30,14 @@ public class TestBase {
         htmlReporter = new ExtentHtmlReporter("src/main/java/output/ORG_Test_Report.html");
         htmlReporter.loadXMLConfig(new File("src/main/resources/extent/extent-config.xml"));
         htmlReporter.setAppendExisting(true);
+
+        extentX = new ExtentXReporter("192.168.99.100");
+        extentX.config().setProjectName("Operation Rio Grande Website Test");
+        extentX.config().setReportName(this.getClass().getSimpleName());
+        extentX.config().setServerUrl("http://192.168.99.100:1337");
+
         extent = new ExtentReports();
-        extent.attachReporter(htmlReporter);
-        extent.setAnalysisStrategy(AnalysisStrategy.SUITE);
-//        extentXReporter = new ExtentXReporter("mongodb-host", 2234);
-//        extent = new ExtentReports("src/main/java/output/ORG_Test_Report.html", true);
-//        extent.loadConfig(new File("src/main/resources/extent/extent-config.xml"));
+        extent.attachReporter(htmlReporter, extentX);
 
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
