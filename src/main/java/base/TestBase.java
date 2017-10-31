@@ -39,6 +39,13 @@ public class TestBase {
 
         extent = new ExtentReports();
         extent.attachReporter(htmlReporter);
+        try {
+            if (true) {
+                throw new RuntimeException("Need to see stacktrace.");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 //        extent.attachReporter(htmlReporter, extentX);
 
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
