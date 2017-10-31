@@ -114,7 +114,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             System.out.println("Retrieving response code failed from URL: <a href='" + url + "'>" + url + "</a>");
             System.out.println(e.getMessage());
             test.log(Status.INFO, url);
-            test.log(Status.FAIL, "ERROR: Failed to retrieve response code from, URL: " + url +
+            test.log(Status.FAIL, "ERROR: Failed to retrieve response code from, URL: <a href='" + url + "'>" + url + "</a>" +
                     "\n<pre>" + e.getMessage().replace("<", "&lt").replace(">","&gt") + "</pre>");
         }
     }
