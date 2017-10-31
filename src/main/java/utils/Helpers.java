@@ -90,7 +90,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
         } while(driver.getCurrentUrl().equals("about:blank"));
     }
 
-    public void getStatusCode(String url) throws Exception {
+    private void getStatusCode(String url) throws Exception {
         try {
             HttpClient client = HttpClientBuilder.create().build();
             HttpResponse response = client.execute(new HttpGet(url));
@@ -101,18 +101,17 @@ public class Helpers extends TestBase implements SpellCheckListener{
             System.out.println("Response: " + statusCode + ", " + responseMessage);
 
             // Report Logging //
-            test.log(Status.INFO, url);
+            test.log(Status.INFO, "<a href='" + url + "'>" + url + "</a>");
             if (statusCode == 200) {
                 test.log(Status.PASS, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
             } else if (statusCode == 403){
                 test.log(Status.WARNING, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
             } else{
                 test.log(Status.FAIL, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
-//                String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
-//                test.addScreenCaptureFromPath(screenshotPath + timestamp + ".png");
+//                test.addScreenCaptureFromPath(screenshotPath + getTimestamp() + ".png");
             }
         }catch (Exception e) {
-            System.out.println("Retrieving response code failed from URL: " + url);
+            System.out.println("Retrieving response code failed from URL: <a href='" + url + "'>" + url + "</a>");
             System.out.println(e.getMessage());
             test.log(Status.INFO, url);
             test.log(Status.FAIL, "ERROR: Failed to retrieve response code from, URL: " + url +
@@ -141,7 +140,8 @@ public class Helpers extends TestBase implements SpellCheckListener{
             links.add(anchor.getAttribute("href"));
         }
 
-        test.log(Status.INFO, "<font color='orange'>SCANNING LINKS ON:&nbsp;&nbsp;</font><font color='aqua'>" + driver.getCurrentUrl() + "</font>");
+        test.log(Status.INFO, "<font color='orange'>SCANNING LINKS ON:&nbsp;&nbsp;</font><a href='" +
+                driver.getCurrentUrl() + "'>" + driver.getCurrentUrl().toUpperCase() + "</a>");
         for (String link : links) {
             if (!checkedLinks.contains(link)) {
                 getStatusCode(link);
@@ -187,4 +187,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
                 ), " ");
     }
 
+    public String getTimestamp() {
+        return new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
+    }
 }

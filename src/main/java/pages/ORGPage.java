@@ -126,19 +126,19 @@ public class ORGPage extends TestBase {
         }
     }
 
-    public void getLinkResponseCode(List<WebElement> links) {
-        try {
-            for (int i=0; i<links.size(); i++) {
-                System.out.println("\n" + links.get(i).getText());
-                String url = links.get(i).getAttribute("href");
-                helpers.getStatusCode(url);
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to retrieve response code.");
-            test.log(Status.FAIL, "ERROR: Failed to retrieve response code.");
-            e.printStackTrace();
-        }
-    }
+//    public void getLinkResponseCode(List<WebElement> links) {
+//        try {
+//            for (int i=0; i<links.size(); i++) {
+//                System.out.println("\n" + links.get(i).getText());
+//                String url = links.get(i).getAttribute("href");
+//                helpers.getStatusCode(url);
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Failed to retrieve response code.");
+//            test.log(Status.FAIL, "ERROR: Failed to retrieve response code.");
+//            e.printStackTrace();
+//        }
+//    }
 
 
 }
