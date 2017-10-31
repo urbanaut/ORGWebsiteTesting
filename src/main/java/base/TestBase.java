@@ -29,9 +29,9 @@ public class TestBase {
     public void init() {
         htmlReporter = new ExtentHtmlReporter("src/main/java/output/ORG_Test_Report.html");
         htmlReporter.loadXMLConfig(new File("src/main/resources/extent/extent-config.xml"));
-        htmlReporter.setAppendExisting(true);
+        htmlReporter.setAppendExisting(false);
 
-        extentX = new ExtentXReporter("192.168.99.100");
+        extentX = new ExtentXReporter("192.168.99.100"); // ExtentX Docker IP
         extentX.config().setProjectName("Operation Rio Grande Website Test");
         extentX.config().setReportName(this.getClass().getSimpleName());
         extentX.config().setServerUrl("http://192.168.99.100:1337");

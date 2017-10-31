@@ -223,4 +223,9 @@ public class ORGPageTests extends TestBase {
         }
     }
 
+    @Test
+    public void crawlUrls() throws Exception {
+        helpers.crawl();
+    }
+
 }
