@@ -38,11 +38,9 @@ public class TestBase {
 //        extentX.config().setServerUrl("http://192.168.99.100:1337");
 
         extent = new ExtentReports();
-        extent.attachReporter(htmlReporter);
+
         try {
-            if (true) {
-                throw new RuntimeException("Need to see stacktrace.");
-            }
+            extent.attachReporter(htmlReporter);
         }catch (Exception e){
             e.printStackTrace();
         }
