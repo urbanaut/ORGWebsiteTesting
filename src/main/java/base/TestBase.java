@@ -27,7 +27,7 @@ public class TestBase {
     protected static ExtentTest test;
 
     @BeforeSuite
-    public void init() {
+    public void init() throws Exception {
         ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(new File("src/main/java/output/ORG_Test_Report.html"));
         htmlReporter.loadXMLConfig(new File("src/main/resources/extent/extent-config.xml"));
         htmlReporter.setAppendExisting(true);
@@ -38,12 +38,12 @@ public class TestBase {
 //        extentX.config().setServerUrl("http://192.168.99.100:1337");
 
         extent = new ExtentReports();
-
-//        try {
-//            extent.attachReporter(htmlReporter);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
+        Thread.sleep(2000);
+        try {
+            extent.attachReporter(htmlReporter);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 //        extent.attachReporter(htmlReporter, extentX);
 
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
