@@ -22,14 +22,13 @@ public class TestBase {
 
     protected static WebDriver driver;
 
-    private static ExtentHtmlReporter htmlReporter;
     private static ExtentXReporter extentX;
     private static ExtentReports extent;
     protected static ExtentTest test;
 
     @BeforeSuite
     public void init() {
-        htmlReporter = new ExtentHtmlReporter("src/main/java/output/ORG_Test_Report.html");
+        ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("src/main/java/output/ORG_Test_Report.html");
         htmlReporter.loadXMLConfig(new File("src/main/resources/extent/extent-config.xml"));
         htmlReporter.setAppendExisting(true);
 
