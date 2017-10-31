@@ -57,6 +57,7 @@ public class ORGPageTests extends TestBase {
                 helpers.checkPageSpelling();
                 driver.navigate().back();
             }
+            test.log(Status.PASS, "Completed spell checking pages successfully.");
         } catch (Exception e) {
             System.out.println("Spelling check failed.");
             test.log(Status.FAIL, "ERROR: Spell check encountered an error.");
@@ -158,8 +159,11 @@ public class ORGPageTests extends TestBase {
         List<WebElement> links = orgPage.getSideLinks();
         try {
             orgPage.openLinksInCurrentOrNewTabAndReturn(links);
+            test.log(Status.PASS, "Opened all side links successfully.");
         }catch (Exception e) {
-
+            System.out.println("ERROR: Failed to open all side links.");
+            test.log(Status.FAIL, "ERROR: Failed to open all side links.");
+            e.printStackTrace();
         }
     }
 
@@ -205,32 +209,17 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-//    @Test
-//    public void checkLinkResponseCodes() throws Exception {
-//        test.log(Status.INFO, "TEST: Checking that all link response codes return 200.");
-//        List<List<WebElement>> allLinks = new ArrayList<>();
-//        try {
-//            allLinks.add(orgPage.getHeaderLinks());
-//            allLinks.add(orgPage.getSideLinkUrls());
-//            allLinks.add(orgPage.getNewsArticles());
-//            allLinks.add(orgPage.getPartnerLinks());
-//            allLinks.add(orgPage.getFooterLinks());
-//            for (List<WebElement> link : allLinks) {
-//                orgPage.getLinkResponseCode(link);
-//            }
-//        } catch (Exception e) {
-//            System.out.println("ERROR: Failed to get response code.");
-//        }
-//    }
-
     @Test
     public void checkLinkResponseCodes() throws Exception {
+        test.log(Status.INFO, "TEST: Scanning all links for response codes.");
         String startingUrl = "https://operationriogrande.utah.gov";
         try {
             helpers.crawlPages(startingUrl, startingUrl);
+            test.log(Status.PASS, "All links scanned successfully.");
         } catch (Exception e) {
             System.out.println("ERROR: Failed to scan links for response codes.");
             test.log(Status.FAIL, "ERROR: Failed to scan links for response codes.");
+            e.printStackTrace();
         }
     }
 

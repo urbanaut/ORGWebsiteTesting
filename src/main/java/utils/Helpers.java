@@ -55,7 +55,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             System.out.println("\nCompleted Spellchecking " + driver.getCurrentUrl());
             System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
             test.log(Status.INFO, "Completed Spellchecking " + driver.getCurrentUrl());
-            test.log(Status.INFO, misspelledWords.size() + " Possibly Misspelled Words Found: \n <pre>" + String.valueOf(misspelledWords) + "</pre>");
+            test.log(Status.WARNING, misspelledWords.size() + " Possibly Misspelled Words Found: \n <pre>" + String.valueOf(misspelledWords) + "</pre>");
         }
     }
 
@@ -115,7 +115,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             System.out.println("Retrieving response code failed from URL: " + url);
             System.out.println(e.getMessage());
             test.log(Status.INFO, url);
-            test.log(Status.FAIL, "ERROR: Failed to retrieve response code from: " + url +
+            test.log(Status.FAIL, "ERROR: Failed to retrieve response code from, URL: " + url +
                     "\n<pre>" + e.getMessage().replace("<", "&lt").replace(">","&gt") + "</pre>");
         }
     }
@@ -176,6 +176,15 @@ public class Helpers extends TestBase implements SpellCheckListener{
                 }
             }
         }
+    }
+
+    public String splitCamelCase(String s) {
+        return s.replaceAll(
+                String.format("%s|%s|%s",
+                        "(?<=[A-Z])(?=[A-Z][a-z])",
+                        "(?<=[^A-Z])(?=[A-Z])",
+                        "(?<=[A-Za-z])(?=[^A-Za-z])"
+                ), " ");
     }
 
 }

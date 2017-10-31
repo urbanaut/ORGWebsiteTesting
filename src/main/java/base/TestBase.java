@@ -4,12 +4,14 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.ExtentXReporter;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
+import utils.Helpers;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -29,15 +31,16 @@ public class TestBase {
     public void init() {
         htmlReporter = new ExtentHtmlReporter("src/main/java/output/ORG_Test_Report.html");
         htmlReporter.loadXMLConfig(new File("src/main/resources/extent/extent-config.xml"));
-        htmlReporter.setAppendExisting(false);
+        htmlReporter.setAppendExisting(true);
 
-        extentX = new ExtentXReporter("192.168.99.100"); // ExtentX Docker IP
-        extentX.config().setProjectName("Operation Rio Grande Website Test");
-        extentX.config().setReportName(this.getClass().getSimpleName());
-        extentX.config().setServerUrl("http://192.168.99.100:1337");
+//        extentX = new ExtentXReporter("192.168.99.100"); // ExtentX Docker IP
+//        extentX.config().setProjectName("Operation Rio Grande Website Test");
+//        extentX.config().setReportName(this.getClass().getSimpleName());
+//        extentX.config().setServerUrl("http://192.168.99.100:1337");
 
         extent = new ExtentReports();
-        extent.attachReporter(htmlReporter, extentX);
+        extent.attachReporter(htmlReporter);
+//        extent.attachReporter(htmlReporter, extentX);
 
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
@@ -54,8 +57,10 @@ public class TestBase {
     }
 
     @BeforeMethod
-    public void beforeMethod(Method method) {
-        test = extent.createTest((this.getClass().getSimpleName() + " :: " + method.getName()), method.getName());
+    public void beforeMethod(Method method) throws Exception {
+        Thread.sleep(500);
+        Helpers h = new Helpers();
+        test = extent.createTest((h.splitCamelCase(StringUtils.capitalize(method.getName()))), method.getName());
         test.assignAuthor("Bill Witt");
         test.assignCategory("Operation Rio Grande Website Test");
     }
