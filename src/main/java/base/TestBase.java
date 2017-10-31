@@ -28,7 +28,7 @@ public class TestBase {
 
     @BeforeSuite
     public void init() {
-        ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("src/main/java/output/ORG_Test_Report.html");
+        ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter(new File("src/main/java/output/ORG_Test_Report.html"));
         htmlReporter.loadXMLConfig(new File("src/main/resources/extent/extent-config.xml"));
         htmlReporter.setAppendExisting(true);
 
