@@ -205,27 +205,33 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test
-    public void checkLinkResponseCodes() throws Exception {
-        test.log(Status.INFO, "TEST: Checking that all link response codes return 200.");
-        List<List<WebElement>> allLinks = new ArrayList<>();
-        try {
-            allLinks.add(orgPage.getHeaderLinks());
-            allLinks.add(orgPage.getSideLinkUrls());
-            allLinks.add(orgPage.getNewsArticles());
-            allLinks.add(orgPage.getPartnerLinks());
-            allLinks.add(orgPage.getFooterLinks());
-            for (List<WebElement> link : allLinks) {
-                orgPage.getLinkResponseCode(link);
-            }
-        } catch (Exception e) {
-            System.out.println("ERROR: Failed to get response code.");
-        }
-    }
+//    @Test
+//    public void checkLinkResponseCodes() throws Exception {
+//        test.log(Status.INFO, "TEST: Checking that all link response codes return 200.");
+//        List<List<WebElement>> allLinks = new ArrayList<>();
+//        try {
+//            allLinks.add(orgPage.getHeaderLinks());
+//            allLinks.add(orgPage.getSideLinkUrls());
+//            allLinks.add(orgPage.getNewsArticles());
+//            allLinks.add(orgPage.getPartnerLinks());
+//            allLinks.add(orgPage.getFooterLinks());
+//            for (List<WebElement> link : allLinks) {
+//                orgPage.getLinkResponseCode(link);
+//            }
+//        } catch (Exception e) {
+//            System.out.println("ERROR: Failed to get response code.");
+//        }
+//    }
 
     @Test
-    public void crawlUrls() throws Exception {
-        helpers.crawl();
+    public void checkLinkResponseCodes() throws Exception {
+        String startingUrl = "https://operationriogrande.utah.gov";
+        try {
+            helpers.crawlPages(startingUrl, startingUrl);
+        } catch (Exception e) {
+            System.out.println("ERROR: Failed to scan links for response codes.");
+            test.log(Status.FAIL, "ERROR: Failed to scan links for response codes.");
+        }
     }
 
 }

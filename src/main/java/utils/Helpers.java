@@ -34,7 +34,6 @@ public class Helpers extends TestBase implements SpellCheckListener{
     private String screenshotPath = "src/main/java/output/";
     private Queue<String> linksToCrawl = new LinkedBlockingQueue<>(1024);
     private Set<String> crawledLinks = new HashSet<>();
-    private String startingUrl = "https://operationriogrande.utah.gov";
     private List<String> checkedLinks = new ArrayList<>();
 
     public void checkPageSpelling() throws Exception {
@@ -105,7 +104,9 @@ public class Helpers extends TestBase implements SpellCheckListener{
             test.log(Status.INFO, url);
             if (statusCode == 200) {
                 test.log(Status.PASS, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
-            } else {
+            } else if (statusCode == 403){
+                test.log(Status.WARNING, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
+            } else{
                 test.log(Status.FAIL, "<pre> Response: " + statusCode + ", " + responseMessage + "</pre>");
 //                String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
 //                test.addScreenCaptureFromPath(screenshotPath + timestamp + ".png");
@@ -114,7 +115,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             System.out.println("Retrieving response code failed from URL: " + url);
             System.out.println(e.getMessage());
             test.log(Status.INFO, url);
-            test.log(Status.FAIL, "ERROR: Failed to retrieve response code from : " + url +
+            test.log(Status.FAIL, "ERROR: Failed to retrieve response code from: " + url +
                     "\n<pre>" + e.getMessage().replace("<", "&lt").replace(">","&gt") + "</pre>");
         }
     }
@@ -130,12 +131,8 @@ public class Helpers extends TestBase implements SpellCheckListener{
     }
 
 
-    public void crawl() throws Exception {
-        crawlPages(startingUrl);
-    }
-
-    public void crawlPages(String baseUrl) throws Exception {
-        driver.navigate().to(baseUrl);
+    public void crawlPages(String nextUrl, String baseUrl) throws Exception {
+        driver.navigate().to(nextUrl);
 
         List<WebElement> anchors = driver.findElements(By.xpath("//a[@href]"));
         List<String> links = new ArrayList<>();
@@ -144,6 +141,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
             links.add(anchor.getAttribute("href"));
         }
 
+        test.log(Status.INFO, "<font color='orange'>SCANNING LINKS ON:&nbsp;&nbsp;</font><font color='aqua'>" + driver.getCurrentUrl() + "</font>");
         for (String link : links) {
             if (!checkedLinks.contains(link)) {
                 getStatusCode(link);
@@ -154,16 +152,17 @@ public class Helpers extends TestBase implements SpellCheckListener{
         for (String link : links) {
             if (!linksToCrawl.contains(link)
                     && !crawledLinks.contains(link)
-                    && link.contains(startingUrl)
+                    && link.contains(baseUrl)
                     && !link.contains("#")
                     && !link.contains("index")
+                    && !link.contains("pdf")
                     && link.length() > 0) {
                 System.out.println("URL found: " + link);
                 linksToCrawl.add(link);
             }
         }
 
-        linksToCrawl.remove(baseUrl);
+        linksToCrawl.remove(nextUrl);
 
         if (linksToCrawl.size() != 0) {
             for (int i=0; i<linksToCrawl.size(); i++) {
@@ -171,33 +170,12 @@ public class Helpers extends TestBase implements SpellCheckListener{
                 if (url != null) {
                     crawledLinks.add(url);
                     System.out.println("Visiting link: " + url);
-                    crawlPages(url);
+                    crawlPages(url, baseUrl);
                 }else {
                     break;
                 }
             }
         }
-//        crawlUrlList(linksToCrawl);
     }
-
-    private void crawlUrlList(Queue<String> queue) throws Exception {
-        int qCount = queue.size();
-        System.out.println("URLs to visit: " + qCount);
-        System.out.println("Visited Urls: " + crawledLinks.size());
-
-        if (qCount != 0) {
-            for (int i = 0; i < qCount; i++) {
-                String url = queue.poll();
-                if (url!=null) {
-                    crawledLinks.add(url);
-                    System.out.println("Visiting link: " + url);
-                    crawlPages(url);
-                } else {
-                    break;
-                }
-            }
-        }
-    }
-
 
 }
