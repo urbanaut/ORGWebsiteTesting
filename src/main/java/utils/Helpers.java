@@ -148,7 +148,7 @@ public class Helpers extends TestBase implements SpellCheckListener {
                     && !link.contains("index")
                     && !link.contains("pdf")
                     && link.length() > 0) {
-                System.out.println("URL found: " + link);
+                //System.out.println("URL found: " + link);
                 linksToCrawl.add(link);
             }
         }
@@ -160,7 +160,7 @@ public class Helpers extends TestBase implements SpellCheckListener {
                 String url = linksToCrawl.poll();
                 if (url != null) {
                     crawledLinks.add(url);
-                    System.out.println("Visiting link: " + url);
+                    //System.out.println("Visiting link: " + url);
                     crawlPages(url, baseUrl);
                 }else {
                     break;
