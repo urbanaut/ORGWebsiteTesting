@@ -70,7 +70,7 @@ public class TestBase {
         test.assignCategory("Operation Rio Grande Website Test");
     }
 
-    @AfterSuite
+    //@AfterSuite
     public void afterSuite() {
         driver.quit();
         extent.flush();

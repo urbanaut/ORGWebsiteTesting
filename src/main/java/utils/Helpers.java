@@ -189,6 +189,7 @@ public class Helpers extends TestBase implements SpellCheckListener {
                 }
             }
         }
+        driver.navigate().to(startingUrl);
     }
 
     public void crawlForSpellingErrors() throws Exception {
@@ -200,6 +201,7 @@ public class Helpers extends TestBase implements SpellCheckListener {
             driver.navigate().to(link);
             checkPageSpelling();
         }
+        driver.navigate().to(startingUrl);
     }
 
     public String splitCamelCase(String s) {
