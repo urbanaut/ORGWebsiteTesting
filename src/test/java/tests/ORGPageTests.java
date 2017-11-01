@@ -215,8 +215,4 @@ public class ORGPageTests extends TestBase {
         }
     }
 
-    @Test
-    public void spellCheckAllPages() throws Exception {
-        helpers.crawlForSpellingErrors();
-    }
 }
