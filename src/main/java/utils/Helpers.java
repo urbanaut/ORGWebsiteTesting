@@ -2,9 +2,6 @@ package utils;
 
 import base.TestBase;
 import com.aventstack.extentreports.Status;
-import com.aventstack.extentreports.markuputils.ExtentColor;
-import com.aventstack.extentreports.markuputils.Markup;
-import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.swabunga.spell.SpellChecker;
 import com.swabunga.spell.TeXWordFinder;
 import com.swabunga.spell.engine.SpellDictionaryHashMap;
@@ -28,13 +25,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Helpers extends TestBase implements SpellCheckListener{
+public class Helpers extends TestBase implements SpellCheckListener {
 
     private List<String> misspelledWords;
-    private String screenshotPath = "src/main/java/output/";
-    private Queue<String> linksToCrawl = new LinkedBlockingQueue<>(1024);
+    private static final String SCREEN_SHOT_PATH = "src/main/java/output/";
     private Set<String> crawledLinks = new HashSet<>();
-    private List<String> checkedLinks = new ArrayList<>();
+    private Queue<String> linksToCrawl = new LinkedBlockingQueue<>(1024);
+
 
     public void checkPageSpelling() throws Exception {
         String dictFile = "src\\main\\resources\\dictionaries\\en-US.dic";
@@ -54,7 +51,7 @@ public class Helpers extends TestBase implements SpellCheckListener{
         if (misspelledWords.size()>1) {
             System.out.println("\nCompleted Spellchecking " + driver.getCurrentUrl());
             System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
-            test.log(Status.INFO, "Completed Spellchecking " + driver.getCurrentUrl());
+            test.log(Status.INFO, "Completed Spellchecking <a href='" + driver.getCurrentUrl() + "'>" + driver.getCurrentUrl() + "</a>");
             test.log(Status.WARNING, misspelledWords.size() + " Possibly Misspelled Words Found: \n <pre>" + String.valueOf(misspelledWords) + "</pre>");
         }
     }
@@ -113,7 +110,6 @@ public class Helpers extends TestBase implements SpellCheckListener{
         }catch (Exception e) {
             System.out.println("Retrieving response code failed from URL: <a href='" + url + "'>" + url + "</a>");
             System.out.println(e.getMessage());
-            test.log(Status.INFO, url);
             test.log(Status.FAIL, "ERROR: Failed to retrieve response code from, URL: <a href='" + url + "'>" + url + "</a>" +
                     "\n<pre>" + e.getMessage().replace("<", "&lt").replace(">","&gt") + "</pre>");
         }
@@ -123,14 +119,14 @@ public class Helpers extends TestBase implements SpellCheckListener{
         String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
         TakesScreenshot screenshot = ((TakesScreenshot)driver);
         File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-        String snapshot = screenshotPath + timestamp +".png";
+        String snapshot = SCREEN_SHOT_PATH + timestamp +".png";
         File destFile = new File(snapshot);
         FileUtils.copyFile(srcFile, destFile);
         return snapshot;
     }
 
 
-    public void crawlPages(String nextUrl, String baseUrl) throws Exception {
+    private void crawlPages(String nextUrl, String baseUrl) throws Exception {
         driver.navigate().to(nextUrl);
 
         List<WebElement> anchors = driver.findElements(By.xpath("//a[@href]"));
@@ -138,15 +134,6 @@ public class Helpers extends TestBase implements SpellCheckListener{
 
         for (WebElement anchor : anchors) {
             links.add(anchor.getAttribute("href"));
-        }
-
-        test.log(Status.INFO, "<font color='orange'>SCANNING LINKS ON:&nbsp;&nbsp;</font><a href='" +
-                driver.getCurrentUrl() + "'>" + driver.getCurrentUrl().toUpperCase() + "</a>");
-        for (String link : links) {
-            if (!checkedLinks.contains(link)) {
-                getStatusCode(link);
-                checkedLinks.add(link);
-            }
         }
 
         for (String link : links) {
@@ -178,6 +165,39 @@ public class Helpers extends TestBase implements SpellCheckListener{
         }
     }
 
+    public void crawlForResponseCodes() throws Exception {
+        String startingUrl = driver.getCurrentUrl();
+        List<String> checkedLinks = new ArrayList<>();
+        List<WebElement> anchors;
+
+        crawlPages(startingUrl, startingUrl);
+
+        for (String link : crawledLinks) {
+            driver.navigate().to(link);
+            test.log(Status.INFO, "<font color='orange'>SCANNING LINKS ON:&nbsp;&nbsp;</font><a href='" +
+                    driver.getCurrentUrl() + "'>" + driver.getCurrentUrl().toUpperCase() + "</a>");
+            anchors = driver.findElements(By.xpath("//a[@href]"));
+            for (WebElement anchor : anchors) {
+                String href = anchor.getAttribute("href");
+                if (!checkedLinks.contains(href)) {
+                    getStatusCode(href);
+                    checkedLinks.add(href);
+                }
+            }
+        }
+    }
+
+    public void crawlForSpellingErrors() throws Exception {
+        String startingUrl = driver.getCurrentUrl();
+
+        crawlPages(startingUrl, startingUrl);
+
+        for (String link : crawledLinks) {
+            driver.navigate().to(link);
+            checkPageSpelling();
+        }
+    }
+
     public String splitCamelCase(String s) {
         return s.replaceAll(
                 String.format("%s|%s|%s",
@@ -190,4 +210,13 @@ public class Helpers extends TestBase implements SpellCheckListener{
     public String getTimestamp() {
         return new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
     }
+
+    private String convertToHttps(String url) {
+        if (!url.contains("https")) {
+            return new StringBuilder(url).insert(4, "s").toString();
+        }else {
+            return url;
+        }
+    }
+
 }

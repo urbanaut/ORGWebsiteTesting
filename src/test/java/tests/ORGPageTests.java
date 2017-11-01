@@ -47,21 +47,13 @@ public class ORGPageTests extends TestBase {
     @Test
     public void checkORGPagesForSpellingErrors() {
         test.log(Status.INFO, "TEST: Checking all ORG pages for spelling errors.");
-        List<WebElement> sideLinks = orgPage.getSideLinks();
         try {
-            helpers.checkPageSpelling();
-            for (int i=1; i<sideLinks.size(); i++) {
-                if (i==3)
-                    continue;
-                sideLinks.get(i).click();
-                helpers.checkPageSpelling();
-                driver.navigate().back();
-            }
+            helpers.crawlForSpellingErrors();
             test.log(Status.PASS, "Completed spell checking pages successfully.");
         } catch (Exception e) {
             System.out.println("Spelling check failed.");
-            test.log(Status.FAIL, "ERROR: Spell check encountered an error.");
             e.printStackTrace();
+            test.log(Status.FAIL, "ERROR: Spell check encountered an error.");
         }
     }
 
@@ -214,7 +206,7 @@ public class ORGPageTests extends TestBase {
         test.log(Status.INFO, "TEST: Scanning all links for response codes.");
         String startingUrl = "https://operationriogrande.utah.gov";
         try {
-            helpers.crawlPages(startingUrl, startingUrl);
+            helpers.crawlForResponseCodes();  //crawlPages(startingUrl, startingUrl);
             test.log(Status.PASS, "All links scanned successfully.");
         } catch (Exception e) {
             System.out.println("ERROR: Failed to scan links for response codes.");
@@ -223,4 +215,8 @@ public class ORGPageTests extends TestBase {
         }
     }
 
+    @Test
+    public void spellCheckAllPages() throws Exception {
+        helpers.crawlForSpellingErrors();
+    }
 }
