@@ -42,6 +42,7 @@ public class Helpers extends TestBase implements SpellCheckListener {
 
         String body = driver.getPageSource();
         Document doc = Jsoup.parse(body);
+        doc.select("a").remove();
         String bodyText = doc.body().text();
         StringWordTokenizer tokenizer = new StringWordTokenizer(bodyText, new TeXWordFinder());
 
@@ -53,6 +54,9 @@ public class Helpers extends TestBase implements SpellCheckListener {
             System.out.println(misspelledWords.size() + " Possibly Misspelled Words Found: " + String.valueOf(misspelledWords));
             test.log(Status.INFO, "Completed Spellchecking <a href='" + driver.getCurrentUrl() + "'>" + driver.getCurrentUrl() + "</a>");
             test.log(Status.WARNING, misspelledWords.size() + " Possibly Misspelled Words Found: \n <pre>" + String.valueOf(misspelledWords) + "</pre>");
+        }else {
+            test.log(Status.INFO, "Completed Spellchecking <a href='" + driver.getCurrentUrl() + "'>" + driver.getCurrentUrl() + "</a>");
+            test.log(Status.PASS, "No misspelled words found on page.");
         }
     }
 

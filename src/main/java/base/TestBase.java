@@ -63,7 +63,7 @@ public class TestBase {
 
     @BeforeMethod
     public void beforeMethod(Method method) throws Exception {
-        Thread.sleep(500);
+        Thread.sleep(1000);
         Helpers h = new Helpers();
         test = extent.createTest((h.splitCamelCase(StringUtils.capitalize(method.getName()))), method.getName());
         test.assignAuthor("Bill Witt");
