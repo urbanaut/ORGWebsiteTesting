@@ -204,9 +204,8 @@ public class ORGPageTests extends TestBase {
     @Test
     public void checkLinkResponseCodes() throws Exception {
         test.log(Status.INFO, "TEST: Scanning all links for response codes.");
-        String startingUrl = "https://operationriogrande.utah.gov";
         try {
-            helpers.crawlForResponseCodes();  //crawlPages(startingUrl, startingUrl);
+            helpers.crawlForResponseCodes();
             test.log(Status.PASS, "All links scanned successfully.");
         } catch (Exception e) {
             System.out.println("ERROR: Failed to scan links for response codes.");
