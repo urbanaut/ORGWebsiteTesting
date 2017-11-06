@@ -33,7 +33,7 @@ public class Helpers extends TestBase implements SpellCheckListener {
     private Queue<String> linksToCrawl = new LinkedBlockingQueue<>(1024);
 
 
-    public void checkPageSpelling() throws Exception {
+    private void checkPageSpelling() throws Exception {
         String dictFile = "src\\main\\resources\\dictionaries\\en-US.dic";
         File dict = new File(dictFile);
 
