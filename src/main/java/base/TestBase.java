@@ -72,7 +72,7 @@ public class TestBase {
 
     @AfterSuite
     public void afterSuite() {
-        driver.quit();
+//        driver.quit();
         extent.flush();
     }
 }

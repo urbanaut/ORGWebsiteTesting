@@ -15,10 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -119,17 +116,6 @@ public class Helpers extends TestBase implements SpellCheckListener {
         }
     }
 
-    public String takeScreenshot() throws Exception {
-        String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
-        TakesScreenshot screenshot = ((TakesScreenshot)driver);
-        File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
-        String snapshot = SCREEN_SHOT_PATH + timestamp +".png";
-        File destFile = new File(snapshot);
-        FileUtils.copyFile(srcFile, destFile);
-        return snapshot;
-    }
-
-
     private void crawlPages(String nextUrl, String baseUrl) throws Exception {
         driver.navigate().to(nextUrl);
 
@@ -213,6 +199,22 @@ public class Helpers extends TestBase implements SpellCheckListener {
                 ), " ");
     }
 
+    public void scrollDown(int length) {
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        jse.executeScript("window.scrollBy(0,"+ Integer.valueOf(length) +")");
+    }
+
+
+    public String takeScreenshot() throws Exception {
+        String timestamp = new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
+        TakesScreenshot screenshot = ((TakesScreenshot)driver);
+        File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
+        String snapshot = SCREEN_SHOT_PATH + timestamp +".png";
+        File destFile = new File(snapshot);
+        FileUtils.copyFile(srcFile, destFile);
+        return snapshot;
+    }
+
     public String getTimestamp() {
         return new SimpleDateFormat("HH.mm.ss_MM.dd.yyy").format(new Date());
     }
@@ -224,5 +226,6 @@ public class Helpers extends TestBase implements SpellCheckListener {
             return url;
         }
     }
+
 
 }

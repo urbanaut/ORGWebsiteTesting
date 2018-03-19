@@ -43,7 +43,7 @@ public class ORGPage extends TestBase {
     private List<WebElement> sideLinkUrls;
 
     // Videos
-    @FindBy(xpath = "//iframe[contains(@src,'youtube')]")
+    @FindBy(xpath = "//div[@class='tl-timenav']//h2]")
     private List<WebElement> videos;
     @FindBy(xpath = "//button[@class='ytp-play-button ytp-button']")
     private WebElement videoPlayPauseBtn;
@@ -51,7 +51,7 @@ public class ORGPage extends TestBase {
     private WebElement archivedVideosLnk;
 
     // News Articles
-    @FindBy(xpath = "//div[@class='col-md-12 recent-media-coverage ']/div[@class='col-md-12 ']//a")
+    @FindBy(xpath = "//div[@class='col-md-12 recent-media-coverage ']/div[@class='col-md-6']//a")
     private List<WebElement> newsArticles;
 
     // Partner Links

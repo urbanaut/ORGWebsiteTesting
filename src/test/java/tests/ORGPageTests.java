@@ -2,7 +2,9 @@ package tests;
 
 import base.TestBase;
 import com.aventstack.extentreports.Status;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -39,7 +41,7 @@ public class ORGPageTests extends TestBase {
             test.log(Status.PASS, "All ORG pages display the 'Operation Rio Grande' heading.");
         } catch (Exception e) {
             System.out.println("Heading not displayed on page.");
-            test.log(Status.FAIL, "The 'Operation Rio Grande' heading is missing on the page: " + driver.getCurrentUrl());
+            test.log(Status.ERROR, "The 'Operation Rio Grande' heading is missing on the page: " + driver.getCurrentUrl());
             e.printStackTrace();
         }
     }
@@ -76,6 +78,7 @@ public class ORGPageTests extends TestBase {
         test.log(Status.INFO, "TEST: Verifying that all videos on the main ORG play.");
         List<WebElement> videos = orgPage.getVideos();
         try {
+            helpers.scrollDown(2000);
             for (int i=0; i<videos.size(); i++) {
                 videos.get(i).click();
                 driver.switchTo().frame(i);
@@ -132,13 +135,23 @@ public class ORGPageTests extends TestBase {
         test.log(Status.INFO, "TEST: Verifying that the 'Volunteer or Donate' page opens.");
         WebElement volunteerLink = orgPage.getSideLinks().get(3);
         try {
+            helpers.scrollDown(1000);
             volunteerLink.click();
             helpers.checkForPageLoadTimeout();
-            List<String> tabs = new ArrayList<>(driver.getWindowHandles());
-            Assert.assertTrue(tabs.size()>1, "No new window opened.");
-            helpers.closeNewTabAndReturn();
-            test.log(Status.PASS, "'Volunteer or Donate' page opened successfully.");
+//            List<String> tabs = new ArrayList<>(driver.getWindowHandles());
+//            Assert.assertTrue(tabs.size()>1, "No new window opened.");
+            WebElement donateBtn = driver.findElement(By.xpath("//h4/a[text()='Donate Now »']"));
+            try {
+                if (donateBtn.isDisplayed()) {
+                    test.log(Status.PASS, "'Volunteer or Donate' page opened successfully.");
+                }
+                helpers.closeNewTabAndReturn();
+            } catch (Exception e) {
+                test.log(Status.FAIL, "'Volunteer or Donate' page failed to open.");
+                helpers.closeNewTabAndReturn();
+            }
         } catch (Exception e) {
+            helpers.closeNewTabAndReturn();
             System.out.println("Failed to navigate to 'Volunteer Or Donate' page.");
             test.log(Status.FAIL, "ERROR: 'Volunteer or Donate' page failed to open.");
             e.printStackTrace();
@@ -150,6 +163,7 @@ public class ORGPageTests extends TestBase {
         test.log(Status.INFO, "TEST: Verifying that all side links open.");
         List<WebElement> links = orgPage.getSideLinks();
         try {
+            helpers.scrollDown(2000);
             orgPage.openLinksInCurrentOrNewTabAndReturn(links);
             test.log(Status.PASS, "Opened all side links successfully.");
         }catch (Exception e) {
@@ -164,6 +178,7 @@ public class ORGPageTests extends TestBase {
         test.log(Status.INFO, "TEST: Verifying that all news article links open.");
         List<WebElement> links = orgPage.getNewsArticles();
         try {
+            helpers.scrollDown(2000);
             orgPage.openLinksInCurrentOrNewTabAndReturn(links);
             test.log(Status.PASS, "All news article links opened successfully.");
         } catch (Exception e) {
@@ -178,6 +193,7 @@ public class ORGPageTests extends TestBase {
         test.log(Status.INFO, "TEST: Verifying that all partner links open.");
         List<WebElement> links = orgPage.getPartnerLinks();
         try {
+            helpers.scrollDown(2000);
             orgPage.openLinksInCurrentOrNewTabAndReturn(links);
             test.log(Status.PASS, "All partner links opened successfully.");
         } catch (Exception e) {
@@ -192,6 +208,7 @@ public class ORGPageTests extends TestBase {
         test.log(Status.INFO, "TEST: Verifying that all footer links open.");
         List<WebElement> links = orgPage.getFooterLinks();
         try {
+            helpers.scrollDown(2000);
             orgPage.openLinksInCurrentOrNewTabAndReturn(links);
             test.log(Status.PASS, "All footer links opened successfully.");
         } catch (Exception e) {

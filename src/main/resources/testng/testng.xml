@@ -7,7 +7,17 @@
     </listeners>
     <test name="ORG Website Regression Tests">
         <classes>
-            <class name="tests.ORGPageTests" />
+            <class name="tests.ORGPageTests" >
+                <methods>
+                    <include name="verifyHeaderPresentOnAllPages" />
+                    <include name="checkORGPagesForSpellingErrors" />
+                    <include name="verifyAllHeaderLinksOpen" />
+                    <include name="verifyORGPhasesPdfFileLoads" />
+                    <include name="verifyAllSideLinksOpen" />
+                    <include name="verifyNewsArticleLinksOpen" />
+                    <include name="verifyAllFooterLinksOpen" />
+                </methods>
+            </class>
         </classes>
     </test>
 

@@ -8,6 +8,7 @@ import javassist.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+// This class helps to preserve the test order of the TestNG tests
 public class AssignTestPriorityTransformer implements IAnnotationTransformer {
 
     private ClassPool classPool = ClassPool.getDefault();
